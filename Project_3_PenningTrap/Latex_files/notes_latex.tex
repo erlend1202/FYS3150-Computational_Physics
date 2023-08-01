@@ -1,0 +1,796 @@
+\documentclass[english,notitlepage]{revtex4-1}  % defines the basic parameters of the document
+%For preview: skriv i terminal: latexmk -pdf -pvc filnavn
+
+
+
+% if you want a single-column, remove reprint
+
+% allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+
+%% note that you may need to download some of these packages manually, it depends on your setup.
+%% I recommend downloading TeXMaker, because it includes a large library of the most common packages.
+
+\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
+\include{amsmath}
+\usepackage{graphicx}         % include graphics such as plots
+\usepackage{xcolor}           % set colors
+\usepackage{hyperref}         % automagic cross-referencing (this is GODLIKE)
+\usepackage{listings}         % display code
+\usepackage{subfigure}        % imports a lot of cool and useful figure commands
+\usepackage{float}
+%\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{url}
+% defines the color of hyperref objects
+% Blending two colors:  blue!80!black  =  80% blue and 20% black
+\hypersetup{ % this is just my personal choice, feel free to change things
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}}
+
+%% Defines the style of the programming listing
+%% This is actually my personal template, go ahead and change stuff if you want
+
+
+
+%% USEFUL LINKS:
+%%
+%%   UiO LaTeX guides:        https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
+%%   mathematics:             https://en.wikibooks.org/wiki/LaTeX/Mathematics
+
+%%   PHYSICS !                https://mirror.hmc.edu/ctan/macros/latex/contrib/physics/physics.pdf
+
+%%   the basics of Tikz:       https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
+%%   all the colors!:          https://en.wikibooks.org/wiki/LaTeX/Colors
+%%   how to draw tables:       https://en.wikibooks.org/wiki/LaTeX/Tables
+%%   code listing styles:      https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+%%   \includegraphics          https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+%%   learn more about figures  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+%%   automagic bibliography:   https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
+%%   REVTeX Guide:             http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
+%%
+%%   (this document is of class "revtex4-1", the REVTeX Guide explains how the class works)
+
+
+%% CREATING THE .pdf FILE USING LINUX IN THE TERMINAL
+%%
+%% [terminal]$ pdflatex template.tex
+%%
+%% Run the command twice, always.
+%% If you want to use \footnote, you need to run these commands (IN THIS SPECIFIC ORDER)
+%%
+%% [terminal]$ pdflatex template.tex
+%% [terminal]$ bibtex template
+%% [terminal]$ pdflatex template.tex
+%% [terminal]$ pdflatex template.tex
+%%
+%% Don't ask me why, I don't know.
+
+\begin{document}
+
+\title{Project 3 Autumn 2021}      % self-explanatory
+\author{Tov Uberg Tyvold, Jonathan Larsen, Sophus Bredesen Gullbekk, Erlend Kristensen}          % self-explanatory
+\date{\today}                             % self-explanatory
+\noaffiliation                            % ignore this, but keep it.
+
+\maketitle 
+
+The link to the GitHub repository is: \url{https://github.uio.no/jonathel/Project_2}.
+
+\section*{Problem 1}
+
+Exercise:
+\textit{Show that the differential equations governing the time evolution of the particle's position can be written as}
+
+\begin{align}
+    \Ddot{x} - \omega_0 \Dot{y}- \frac{1}{2} \omega_z^2 x &= 0
+    \\[0.2in]
+    \Ddot{y} + \omega_0 \Dot{x}- \frac{1}{2} \omega_z^2 y &= 0
+    \\[0.2in]
+    \Ddot{z} + \omega_z^2 z &= 0
+\end{align}
+
+We can write out N2L firstly with each component. As noted in the text, this deduction is for a single particle.
+
+\begin{align}
+    m \bf{\Ddot{r}} &= \sum_i \textbf{F}_i
+    \\
+    &= \sum_i q \Vec{E} + q \Vec{v} \times \Vec{B}
+\end{align}
+where we have the following variables
+
+\begin{align}
+    \Vec{E} = - \nabla V = - \left( - \frac{V_0 x}{d^2}, - \frac{V_0 y}{d^2},\frac{2 V_0 z}{d^2} \right) = \left(\frac{V_0 x}{d^2}, \frac{V_0 y}{d^2}, -\frac{2 V_0 z}{d^2} \right)
+\end{align}
+
+\begin{align}
+    \Vec{v} = (v_x, v_y, v_z), \quad \Vec{B} = (0,0, B_0)
+\end{align}
+\begin{align} 
+    \Vec{v} \times \Vec{B} = v_y B_0 \hat{i} - v_x B_0 \hat{j}
+\end{align}
+
+Now none of these variables are in iteration, so we can remove the sum sign and proceed
+
+\begin{align}
+    m \bf{\Ddot{r}} &= q \Vec{E} + q \Vec{v} \times \Vec{B}
+    \\
+    &= q \cdot \left(\frac{V_0 x}{d^2}, \frac{V_0 y}{d^2}, -\frac{2 V_0 z}{d^2} \right) + q \left( v_y B_0 \hat{i} - v_x B_0 \hat{j} \right)
+\end{align}
+
+Now in $x$-, $y$- and $z$- direction respectively
+
+\begin{align}
+    \Ddot{x}- \frac{qB_0}{m}\cdot \Dot{y} - \frac{qV_0}{m d^2} \cdot x &= 0
+    \\
+    \Ddot{y}+ \frac{qB_0}{m} \cdot  \Dot{x} - \frac{qV_0}{m d^2} \cdot y &= 0
+    \\
+    \Ddot{z} + \frac{2 q V_0}{m d^2} \cdot z &= 0
+\end{align}
+
+we remind of the relation
+\begin{align}
+    \omega_o = \frac{|q| B_0}{m}, \qquad \omega_z = \sqrt{\frac{2 |q| B_0}{m d^2}}
+\end{align}
+using these we get
+
+\begin{align}
+    \Ddot{x}- \omega_0\cdot \Dot{y} - \frac{1}{2}\omega_z^2 \cdot x &= 0
+    \\
+    \Ddot{y} + \omega_0 \cdot  \Dot{x} - \frac{1}{2}\omega_z^2 \cdot y &= 0
+    \\
+    \Ddot{z} +  \omega_z^2 \cdot z &= 0
+\end{align}
+
+Then we will show the general solution for $z$. We can interpret this as an ODE of second order and set up the characteristic equation utilizing imaginary numbers
+
+\begin{align}
+    \Ddot{z} + \omega_z^2 z = 0 \quad \rightarrow r^2 + \omega_z^2 = 0
+\end{align}
+
+\begin{align}
+    \frac{0 \pm \sqrt{0 - 4 \cdot 1 \cdot \frac{2aV_0}{md^2}}}{2} &= \pm i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}
+\end{align}
+\begin{align}
+    z_1 = i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}, \quad z_2 = -i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}
+\end{align}
+
+now we integrate eq. $17$. Firstly we assume a solution on the form $r(z) = e^{\alpha z}$ for some constant $\alpha$. By substitution we get
+
+\begin{align}
+    \frac{\partial^2 r}{\partial z^2} + \omega_z^2 r_z = \frac{\partial^2 (e^{\alpha z})}{\partial z^2} + \omega_z^2 e^{\alpha z}
+\end{align}
+\begin{align}
+    \alpha^2 e^{\alpha z} \omega_z^2 e^{\alpha z} = e^{\alpha z} ( \alpha^2 + \omega_z^2) 
+\end{align}
+
+Now we recognize that eq $22$ has a solution on the form
+
+\begin{align}
+    r(z) = r(z)_1 + r(z)_2 = c_1 e^{\alpha_1 z} + c_2 e^{\alpha_2 z}
+\end{align}
+
+where $\alpha_1$ and $\alpha_2$ will be 
+
+\begin{align}
+    \alpha_1 &= i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2} = i \omega_z
+    \\
+    \alpha_2 &= -i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2} = -i \omega_z
+\end{align}
+
+so we get 
+
+\begin{align}
+    r(z) = c_1 e^{i \omega_z z} + c_2 e^{-i \omega_z z}
+\end{align}
+We can apply Eulers Identity which states
+
+\begin{align}
+    e^{\gamma + i \beta} = e^{\gamma} \cos(\beta) + ie^{\gamma} \sin(\beta)
+\end{align}
+
+So in our case we get 
+
+\begin{align}
+    r(z) = c_1 ( \cos(\omega_z z) + i \sin(\omega_z z) + c_2 ( \cos(\omega_z z) - i \sin(\omega_z z)
+\end{align}
+
+$c_1$ and $c_2$ are arbitrary and $i$ is a constant, so by regrouping $\cos$ and $\sin$ we get 
+
+\begin{align}
+    (c_1 + c_2) \cos(\omega_z z) + i (c_1 - c_2) \sin(\omega_z z) &= c_1 \cos(\omega_z z) + c_2 \sin(\omega_z z)
+\end{align}
+
+so our general solution is 
+
+\begin{align}
+    r(z) = c_1 \cos(\omega_z z) + c_2 \sin(\omega_z z)
+\end{align}
+
+
+\section*{Problem 2}
+
+We have 
+\begin{align}
+    f(t) = x(t) + i y(t) 
+\end{align}
+
+and the equation
+
+\begin{align}
+    \Ddot{f} + i\omega_0 \Dot{f} - \frac{1}{2} \omega_z^2 f = 0
+\end{align}
+
+being a superposition of the two equations
+
+\begin{align}
+    \Ddot{x} - \omega_0 \Dot{y} - \frac{1}{2} \omega_z^2 x &= 0
+    \\
+    \Ddot{y} + \omega_0 \Dot{x} - \frac{1}{2} \omega_z^2 y &= 0
+\end{align}
+
+If we do analyze each term in $32$ we have
+
+\begin{align}
+    \Ddot{f} &= \Ddot{x} + i \Ddot{y}
+    \\
+    i \omega_0 \Dot{f} &= i \omega_0\Dot{x} - \omega_0\Dot{y}
+    \\
+    - \frac{1}{2} w_z^2 f &= - \frac{1}{2} \omega_z^2 \left[ x(t) + i y(t) \right]
+\end{align}
+
+Now since the function $f$ consists of a real part and a imaginary part, we will seperate the two as well respectively
+
+\begin{align}
+   \text{Re}f &= \Ddot{x} - \omega_0\Dot{y} - \frac{1}{2}\omega_z^2 x(t)
+   \\
+   \text{Im}f &= \Ddot{y} + \omega_0\Dot{x} - \frac{1}{2}\omega_z^2 y(t)
+\end{align}
+
+Considering the hint, that the following applies
+
+\begin{align}
+    \mathcal{F}( f, \Dot{f}, \Ddot{f}) &= 0
+    \\
+    \mathcal{G}( g, \Dot{g}, \Ddot{g}) &= 0
+    \\
+    \mathcal{F} + c \cdot  \mathcal{G} &= 0
+\end{align}
+
+we can set up the equation in a similar manner for the functions in our problem 
+
+\begin{align}
+    \mathcal{X}( x, \Dot{x}, \Ddot{x}) &= 0
+    \\
+    \mathcal{Y}( y, \Dot{y}, \Ddot{y}) &= 0
+    \\
+    \mathcal{X} + i \cdot \mathcal{Y} &= 0
+\end{align}
+
+then as for $\mathcal{F} + c \cdot \mathcal{G} = 0$, we have 
+$\mathcal{X} + i \cdot \mathcal{Y} = 0$ since equations $33$ and $34$ both equals zero and fulfills the requirement. This means that we can write $f$ as a superposition of the real and imaginary part since in essence, $33$ and $34$ does not change its mapping when multiplied with any constant. 
+
+
+\section*{Problem 2}
+
+General solution to eq. $16$ is 
+
+\begin{align}
+    f(t) = A_{+} e^{-i\omega_{+}t} + A_{-} e^{-i\omega_{-}t}
+\end{align}
+where
+
+\begin{align}
+    w_{\pm} = \frac{\omega_0 \pm \sqrt{w_0^2 - 2w_z^2}}{2}
+\end{align}
+
+We also have the definitions
+\begin{align}
+    x(t) = Re\;f(t), \quad y(t) = Im \; f(t)
+\end{align}
+
+We firstly assume that $A_{\pm}$ are constants. To hinder $|f(t)| \rightarrow \infty$ we need 
+
+\begin{align}
+    w_0^2 &> 2w_z^2
+    \\
+    \frac{q^2 B_0^2}{m^2} &> \frac{q V_0}{md^2}
+    \\
+    \frac{d^2 q B_0^2}{V_0 m} &> 1
+\end{align}
+
+where $d^2 > 0$, $m > 0$, $|q| > 0$ and $B_0^2 > 0$. So the inequality is always held. This is the constraint we need inside the root-sign. Now we need to examine if $\omega_{-}$ is positive or negative. 
+\\
+For this, we will check 
+
+\begin{align}
+    \omega_0 &> \sqrt{\frac{d^2 q B_0^2}{V_0 m}} > 0
+\end{align}
+
+which holds for all variables. Thus the constraint we need is that the denominator is smaller than the numerator.
+\end{document}
+
+
+\documentclass[english,notitlepage]{revtex4-2}  % defines the basic parameters of the document
+%For preview: skriv i terminal: latexmk -pdf -pvc filnavn
+
+
+
+% if you want a single-column, remove reprint
+
+% allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+
+%% note that you may need to download some of these packages manually, it depends on your setup.
+%% I recommend downloading TeXMaker, because it includes a large library of the most common packages.
+
+\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
+\include{amsmath}
+\usepackage{graphicx}         % include graphics such as plots
+\usepackage{xcolor}           % set colors
+\usepackage{hyperref}         % automagic cross-referencing (this is GODLIKE)
+\usepackage{listings}         % display code
+\usepackage{subfigure}        % imports a lot of cool and useful figure commands
+\usepackage{float}
+%\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{url}
+% defines the color of hyperref objects
+% Blending two colors:  blue!80!black  =  80% blue and 20% black
+\hypersetup{ % this is just my personal choice, feel free to change things
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}}
+
+%% Defines the style of the programming listing
+%% This is actually my personal template, go ahead and change stuff if you want
+
+
+
+%% USEFUL LINKS:
+%%
+%%   UiO LaTeX guides:        https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
+%%   mathematics:             https://en.wikibooks.org/wiki/LaTeX/Mathematics
+
+%%   PHYSICS !                https://mirror.hmc.edu/ctan/macros/latex/contrib/physics/physics.pdf
+
+%%   the basics of Tikz:       https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
+%%   all the colors!:          https://en.wikibooks.org/wiki/LaTeX/Colors
+%%   how to draw tables:       https://en.wikibooks.org/wiki/LaTeX/Tables
+%%   code listing styles:      https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+%%   \includegraphics          https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+%%   learn more about figures  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+%%   automagic bibliography:   https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
+%%   REVTeX Guide:             http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
+%%
+%%   (this document is of class "revtex4-1", the REVTeX Guide explains how the class works)
+
+
+%% CREATING THE .pdf FILE USING LINUX IN THE TERMINAL
+%%
+%% [terminal]$ pdflatex template.tex
+%%
+%% Run the command twice, always.
+%% If you want to use \footnote, you need to run these commands (IN THIS SPECIFIC ORDER)
+%%
+%% [terminal]$ pdflatex template.tex
+%% [terminal]$ bibtex template
+%% [terminal]$ pdflatex template.tex
+%% [terminal]$ pdflatex template.tex
+%%
+%% Don't ask me why, I don't know.
+
+\begin{document}
+
+\title{Project 3 Autumn 2021}      % self-explanatory
+\author{Tov Uberg Tyvold, Jonathan Larsen, Sophus Bredesen Gullbekk, Erlend Kristensen}          % self-explanatory
+\date{\today}                             % self-explanatory
+\noaffiliation                            % ignore this, but keep it.
+
+\maketitle 
+
+The link to the GitHub repository is: \url{https://github.uio.no/jonathel/Project_2}.
+
+\section*{Problem 1}
+
+Exercise:
+\textit{Show that the differential equations governing the time evolution of the particle's position can be written as}
+
+\begin{align}
+    \Ddot{x} - \omega_0 \Dot{y}- \frac{1}{2} \omega_z^2 x &= 0
+    \\[0.2in]
+    \Ddot{y} + \omega_0 \Dot{x}- \frac{1}{2} \omega_z^2 y &= 0
+    \\[0.2in]
+    \Ddot{z} + \omega_z^2 z &= 0
+\end{align}
+
+We can write out N2L firstly with each component. As noted in the text, this deduction is for a single particle.
+
+\begin{align}
+    m \bf{\Ddot{r}} &= \sum_i \textbf{F}_i
+    \\
+    &= \sum_i q \Vec{E} + q \Vec{v} \times \Vec{B}
+\end{align}
+where we have the following variables
+
+\begin{align}
+    \Vec{E} = - \nabla V = - \left( - \frac{V_0 x}{d^2}, - \frac{V_0 y}{d^2},\frac{2 V_0 z}{d^2} \right) = \left(\frac{V_0 x}{d^2}, \frac{V_0 y}{d^2}, -\frac{2 V_0 z}{d^2} \right)
+\end{align}
+
+\begin{align}
+    \Vec{v} = (v_x, v_y, v_z), \quad \Vec{B} = (0,0, B_0)
+\end{align}
+\begin{align} 
+    \Vec{v} \times \Vec{B} = v_y B_0 \hat{i} - v_x B_0 \hat{j}
+\end{align}
+
+Now none of these variables are in iteration, so we can remove the sum sign and proceed
+
+\begin{align}
+    m \bf{\Ddot{r}} &= q \Vec{E} + q \Vec{v} \times \Vec{B}
+    \\
+    &= q \cdot \left(\frac{V_0 x}{d^2}, \frac{V_0 y}{d^2}, -\frac{2 V_0 z}{d^2} \right) + q \left( v_y B_0 \hat{i} - v_x B_0 \hat{j} \right)
+\end{align}
+
+Now in $x$-, $y$- and $z$- direction respectively
+
+\begin{align}
+    \Ddot{x}- \frac{qB_0}{m}\cdot \Dot{y} - \frac{qV_0}{m d^2} \cdot x &= 0
+    \\
+    \Ddot{y}+ \frac{qB_0}{m} \cdot  \Dot{x} - \frac{qV_0}{m d^2} \cdot y &= 0
+    \\
+    \Ddot{z} + \frac{2 q V_0}{m d^2} \cdot z &= 0
+\end{align}
+
+we remind of the relation
+\begin{align}
+    \omega_o = \frac{|q| B_0}{m}, \qquad \omega_z = \sqrt{\frac{2 |q| B_0}{m d^2}}
+\end{align}
+using these we get
+
+\begin{align}
+    \Ddot{x}- \omega_0\cdot \Dot{y} - \frac{1}{2}\omega_z^2 \cdot x &= 0
+    \\
+    \Ddot{y} + \omega_0 \cdot  \Dot{x} - \frac{1}{2}\omega_z^2 \cdot y &= 0
+    \\
+    \Ddot{z} +  \omega_z^2 \cdot z &= 0
+\end{align}
+
+Then we will show the general solution for $z$. We can interpret this as an ODE of second order and set up the characteristic equation utilizing imaginary numbers
+
+\begin{align}
+    \Ddot{z} + \omega_z^2 z = 0 \quad \rightarrow r^2 + \omega_z^2 = 0
+\end{align}
+
+\begin{align}
+    \frac{0 \pm \sqrt{0 - 4 \cdot 1 \cdot \frac{2aV_0}{md^2}}}{2} &= \pm i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}
+\end{align}
+\begin{align}
+    z_1 = i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}, \quad z_2 = -i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2}
+\end{align}
+
+now we integrate eq. $17$. Firstly we assume a solution on the form $r(z) = e^{\alpha z}$ for some constant $\alpha$. By substitution we get
+
+\begin{align}
+    \frac{\partial^2 r}{\partial z^2} + \omega_z^2 r_z = \frac{\partial^2 (e^{\alpha z})}{\partial z^2} + \omega_z^2 e^{\alpha z}
+\end{align}
+\begin{align}
+    \alpha^2 e^{\alpha z} \omega_z^2 e^{\alpha z} = e^{\alpha z} ( \alpha^2 + \omega_z^2) 
+\end{align}
+
+Now we recognize that eq $22$ has a solution on the form
+
+\begin{align}
+    r(z) = r(z)_1 + r(z)_2 = c_1 e^{\alpha_1 z} + c_2 e^{\alpha_2 z}
+\end{align}
+
+where $\alpha_1$ and $\alpha_2$ will be 
+
+\begin{align}
+    \alpha_1 &= i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2} = i \omega_z
+    \\
+    \alpha_2 &= -i \sqrt{\frac{8 q V_0}{md^2}} \cdot \frac{1}{2} = -i \omega_z
+\end{align}
+
+so we get 
+
+\begin{align}
+    r(z) = c_1 e^{i \omega_z z} + c_2 e^{-i \omega_z z}
+\end{align}
+We can apply Eulers Identity which states
+
+\begin{align}
+    e^{\gamma + i \beta} = e^{\gamma} \cos(\beta) + ie^{\gamma} \sin(\beta)
+\end{align}
+
+So in our case we get 
+
+\begin{align}
+    r(z) = c_1 ( \cos(\omega_z z) + i \sin(\omega_z z) + c_2 ( \cos(\omega_z z) - i \sin(\omega_z z)
+\end{align}
+
+$c_1$ and $c_2$ are arbitrary and $i$ is a constant, so by regrouping $\cos$ and $\sin$ we get 
+
+\begin{align}
+    (c_1 + c_2) \cos(\omega_z z) + i (c_1 - c_2) \sin(\omega_z z) &= c_1 \cos(\omega_z z) + c_2 \sin(\omega_z z)
+\end{align}
+
+so our general solution is 
+
+\begin{align}
+    r(z) = c_1 \cos(\omega_z z) + c_2 \sin(\omega_z z)
+\end{align}
+
+
+\section*{Problem 2}
+
+We have 
+\begin{align}
+    f(t) = x(t) + i y(t) 
+\end{align}
+
+and the equation
+
+\begin{align}
+    \Ddot{f} + i\omega_0 \Dot{f} - \frac{1}{2} \omega_z^2 f = 0
+\end{align}
+
+being a superposition of the two equations
+
+\begin{align}
+    \Ddot{x} - \omega_0 \Dot{y} - \frac{1}{2} \omega_z^2 x &= 0
+    \\
+    \Ddot{y} + \omega_0 \Dot{x} - \frac{1}{2} \omega_z^2 y &= 0
+\end{align}
+
+If we do analyze each term in $32$ we have
+
+\begin{align}
+    \Ddot{f} &= \Ddot{x} + i \Ddot{y}
+    \\
+    i \omega_0 \Dot{f} &= i \omega_0\Dot{x} - \omega_0\Dot{y}
+    \\
+    - \frac{1}{2} w_z^2 f &= - \frac{1}{2} \omega_z^2 \left[ x(t) + i y(t) \right]
+\end{align}
+
+Now since the function $f$ consists of a real part and a imaginary part, we will seperate the two as well respectively
+
+\begin{align}
+   \text{Re}f &= \Ddot{x} - \omega_0\Dot{y} - \frac{1}{2}\omega_z^2 x(t)
+   \\
+   \text{Im}f &= \Ddot{y} + \omega_0\Dot{x} - \frac{1}{2}\omega_z^2 y(t)
+\end{align}
+
+Considering the hint, that the following applies
+
+\begin{align}
+    \mathcal{F}( f, \Dot{f}, \Ddot{f}) &= 0
+    \\
+    \mathcal{G}( g, \Dot{g}, \Ddot{g}) &= 0
+    \\
+    \mathcal{F} + c \cdot  \mathcal{G} &= 0
+\end{align}
+
+we can set up the equation in a similar manner for the functions in our problem 
+
+\begin{align}
+    \mathcal{X}( x, \Dot{x}, \Ddot{x}) &= 0
+    \\
+    \mathcal{Y}( y, \Dot{y}, \Ddot{y}) &= 0
+    \\
+    \mathcal{X} + i \cdot \mathcal{Y} &= 0
+\end{align}
+
+then as for $\mathcal{F} + c \cdot \mathcal{G} = 0$, we have 
+$\mathcal{X} + i \cdot \mathcal{Y} = 0$ since equations $33$ and $34$ both equals zero and fulfills the requirement. This means that we can write $f$ as a superposition of the real and imaginary part since in essence, $33$ and $34$ does not change its mapping when multiplied with any constant. 
+
+
+\section*{Problem 3}
+
+General solution to eq. $16$ is 
+
+\begin{align}
+    f(t) = A_{+} e^{-i\omega_{+}t} + A_{-} e^{-i\omega_{-}t}
+\end{align}
+where
+
+\begin{align}
+    w_{\pm} = \frac{\omega_0 \pm \sqrt{w_0^2 - 2w_z^2}}{2}
+\end{align}
+
+We also have the definitions
+\begin{align}
+    x(t) = Re\;f(t), \quad y(t) = Im \; f(t)
+\end{align}
+
+We firstly assume that $A_{\pm}$ are constants. To hinder $|f(t)| \rightarrow \infty$ we need 
+
+\begin{align}
+    w_0^2 &\geq 2w_z^2
+    \\
+    \frac{q^2 B_0^2}{m^2} &\geq \frac{4q V_0}{md^2}
+    \\
+    \frac{q}{m} &\geq \frac{4V_0}{d^2 B_0^2}
+\end{align}
+
+where $d^2 > 0$, $m > 0$, $|q| > 0$ and $B_0^2 > 0$. So the inequality is always held. This is the constraint we need inside the root-sign. Now we need to examine if $\omega_{-}$ is positive or negative. 
+\\
+For this, we will check 
+
+\begin{align}
+    \omega_0 &> \sqrt{\frac{d^2 q B_0^2}{V_0 m}} > 0
+\end{align}
+
+which holds for all variables. Thus the constraint we need is that the denominator is smaller than the numerator.
+
+\section*{Problem 4}
+
+For us to get a better understanding of the particles movement, it can be useful to check a upper and lower bound for the particles distance from the origin in the $xy$-plane. Remember that the general solution is 
+
+\begin{align}
+    f(t) &= A_{+} e^{-i\omega_{+}t} + A_{-} e^{-i\omega_{-}t}
+\end{align}
+We need to write this out on a form without imaginary numbers to get a better understanding of the distance. We do this with the formula
+\begin{align}
+	e^{it} &= cos(t)+ sin (t)
+\end{align}
+So now we transform our general solution
+\begin{align}
+	f(t) = A_+(cos(w_+t) - isin (w_+t)) + A_-(cos(w_-t) - isin (w_-t))
+	\\ = A_+cos(w_+t) + A_-cos(w_-t) -i(A_+sin(w_+t) + A_-sin(w_-t))
+\end{align}
+We then want to use the formula for distance
+\begin{align}
+r = \sqrt{x^2 + y^2} = \sqrt{(Ref)^2 + (Imf)^2}
+\end{align}
+where we have that 
+\begin{align}
+x(t) &= Ref(t) = A_+cos(w_+t) + A_-cos(w_-t)
+\\
+y(t) &= Imf(t) = -(A_+sin(w_+t) + A_-sin(w_-t))
+\end{align}
+so we get
+\begin{align}
+r = [A_+^ 2cos^2(w_+t) + 2A_+ A_- cos(w_+t)cos(w_-t) + A_-^2 cos^2(w_-t) + \\ A_+^2 sin^2(w_+t) + 2A_+ A_- sin(w_+t)sin(w_-t) + A_+^2 sin^2(w_-t)]^{1/2}
+\end{align}
+using the relations
+\begin{align}
+cos^2(a*t) + sin^2(a*t) &= 1
+\\ 
+cos(X)cos(Y) - sin(X)sin(Y) &= cos(X-Y)
+\end{align}
+we then get the result
+\begin{align}
+r = [A_+^2 + A_-^2 + 2 A_+ A_- cos(t(w_+ - w_-))]^{1/2}
+\end{align}
+to find the upper and lower bounds, we look at what scenarios maximize and minimize the resulting distance.
+\\To maximize we set 
+\begin{align}
+cos(t(w_+ - w_-)) = 1
+\\ \implies r = [A_+^2 + A_-^2 + 2 A_+ A_-]^{1/2}
+\\ = [(A_+ + A_-)^2]^{1/2} = \pm A_+ + A_-
+\end{align}
+since we are after the maximized value, we get
+\begin{align}
+r \leq A_+ + A_- 
+\end{align}
+To minimize $r$, we set
+\begin{align}
+cos(t(w_+ - w_-)) = -1
+\\ \implies r = [A_+^2 + A_-^2 - 2 A_+ A_-]^{1/2}
+\\ = [(A_+ - A_-)^2]^{1/2} = \pm (A_+ - A_-)
+\end{align}
+since we don't know which of $A_+$ or $A_-$ is larger, we change this to the absolute value, so we get
+\begin{align}
+|A_+ - A_-| \leq r
+\end{align}
+we then have
+\begin{align}
+|A_+ - A_-| &\leq r \leq A_+ + A_-
+\\ R_- &\leq r \leq R_+
+\end{align}
+where
+\begin{align}
+R_- &= |A_+ - A_-|
+\\ R_+ &= A_+ + A_-
+\end{align}
+\pagebreak
+\section*{Problem 5}
+
+To test an implementation of the penning trap, it can be smart to have a specific analytical solution to test against. We therefore want to find a specific solution for $z(t)$, and also for $f(t)$. We set up a few initial conditions to help us find these
+\begin{align}
+x(0) = x_0, \quad  &\dot{x}(0) = 0, \\
+y(0) = 0,  \quad   &\dot{y}(0) = v_0, \\
+z(0) = z_0, \quad  &\dot{z}(0) = 0, 
+\end{align}
+we remember that
+\begin{align}
+x(t) &=  A_+cos(w_+t) + A_-cos(w_-t)
+\\
+y(t) &=  -(A_+sin(w_+t) + A_-sin(w_-t))
+\end{align}
+and the derivatives are therefore 
+\begin{align}
+\dot{x}(t) &= -A_+ w_+ sin(w_+t) -A_- w_- sin(w_-t)
+\\
+\dot{y}(t) &= -(A_+ w_+ cos(w_+t) + A_- w_- cos(w_-t))
+\end{align}
+we then put in the initial conditions
+\begin{align}
+&x(0) =  A_+cos(0) + A_-cos(0) = A_+ + A_- = x_0 
+\\
+&\dot{x}(0) = -A_+ w_+ sin(0) -A_- w_- sin(0) = 0
+\\
+&y(0) = -(A_+sin(0) + A_-sin(0)) = 0
+\\
+&\dot{y}(0) = -(A_+ w_+ cos(0) + A_- w_- cos(0)) = -A_+ w_+ - A_- w_- = v_0
+\end{align}
+from equation (84) we have that 
+\begin{align}
+A_+ = x_0 - A_-
+\end{align}
+we put this into equation (87) and get
+\begin{align}
+-(x_0 - A_-) w_+ - A_- w_- = v_0&
+\\
+A_- w_+ - x_0 w_+ - A_- w_- = v_0&
+\\
+A_- (w_+ - w_-) = v_0 + x_0 w_+&
+\\
+A_- = \frac{v_0 + x_0 w_+}{w_+ - w_-} = - \frac{v_0 + x_0 w_+}{w_- - w_+}&
+\\
+\end{align}
+so we get
+\begin{align}
+A_+ = x_0 - A_- = \frac{x_0(w_- - w_+) + v_0 + x_0 w_+}{w_- - w_+} =
+\frac{v_0 + x_0 w_-}{w_- - w_+}
+\end{align}
+and then to find the specific solution for $z(t)$ we need to remember that
+\begin{align}
+\ddot{z} + w_z^2 z = 0
+\end{align}
+we then set $t = 0$, and use the initial condition $z(0) = z_0$
+\begin{align}
+&\ddot{z}(0) + w_z^2 z(0) = 0
+\\
+&\ddot{z}(0) + w_z^2 z_0 = 0
+\\
+&\ddot{z}(0) = - w_z^2 z_0 
+\end{align}	
+We see that this is a linear differential equation, which means that
+\begin{align}
+&z(t) = c_2 sin(w_z t) + c_1 cos(w_z t)
+\\
+&\dot{z}(t) = c_2 w_z cos(w_z t) - c_1 w_z sin(w_z t)
+\end{align}
+setting in initial conditions
+\begin{align}
+&z(0) = c_2 sin(0) + c_1 cos(0) = c_1 = z_0
+\\
+&\dot{z}(0) = c_2 w_z cos(0) - c_1 w_z sin(0) = c_2 w_z = 0
+\end{align}
+since $w_z > 0$, then $c_2 = 0$, and we end up with the specific solution
+\begin{align}
+z(t) = z_0 cos(w_z t) 
+\end{align}
+to test that it is correct, we take the double derivative of the function
+\begin{align}
+\ddot{z}(t) = -w_z^2 z_0 cos(w_z t) = -w_z^2 z(t)
+\end{align}
+which is correct
+\end{document}
+
+
